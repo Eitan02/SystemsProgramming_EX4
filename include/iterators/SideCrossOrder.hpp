@@ -27,8 +27,7 @@ namespace container {
 template<typename T>
 class MyContainer;  // forward-declaration to allow nested definition
 
-//Traverses the container in a "side-cross" pattern:
-//smallest, largest, 2nd-smallest, 2nd-largest, etc.
+//Traverses the container in a "side-cross" pattern: smallest, largest, 2nd-smallest, 2nd-largest, etc.
 template<typename T>
 class MyContainer<T>::SideCrossOrder : public BaseIterator<MyContainer<T>, T> {
 public:

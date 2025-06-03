@@ -26,10 +26,9 @@
 namespace container {
 
 /**
- * @brief A generic container for comparable elements that supports
+ * A generic container for comparable elements that supports
  * dynamic insertion, removal, and multiple custom traversal orders.
- *
- * @tparam T A type that supports operator< and operator==.
+ * @param T: A type that supports operator< and operator==.
  */
 template<typename T>
 class MyContainer {
@@ -68,15 +67,13 @@ public:
     MyContainer& operator=(MyContainer&& other) noexcept = default;
     ~MyContainer() = default;
 
-    /**
-     * @brief Insert a new element into the container.
-     */
+    //Insert a new element into the container.
     void add(const T& value) {
         elements.push_back(value);
     }
 
     /**
-     * @brief Remove all occurrences of a given element.
+     * Removes all occurrences of a given element.
      * @throws std::runtime_error if the element is not found.
      */
     void remove(const T& value) {
@@ -90,16 +87,12 @@ public:
         }
     }
 
-    /**
-     * @brief Return the number of elements currently stored.
-     */
+    // Returns the number of elements currently stored.
     size_t size() const noexcept {
         return elements.size();
     }
 
-    /**
-     * @brief Print the container in a human-readable format: [a, b, c]
-     */
+    // Prints the container in a human-readable format: [a, b, c]
     friend std::ostream& operator<<(std::ostream& os, const MyContainer<T>& cont) {
         os << "[";
         for (size_t i = 0; i < cont.elements.size(); ++i) {
