@@ -25,8 +25,6 @@ TEST_EXE := test_container
 
 .PHONY: all Main test valgrind clean
 
-all: $(MAIN_EXE) $(TEST_EXE)
-
 # Build the main demonstration program
 $(MAIN_EXE): $(SRC)
 	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) $(SRC) -o $(MAIN_EXE)

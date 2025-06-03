@@ -3,7 +3,7 @@
 /*
   Purpose:
     - Verify that MyContainer<T>::Order iterator visits elements in insertion order.
-    - Confirm that range-based for uses Order iterator by default.
+    - Confirm that range-based for, uses Order iterator by default.
 */
 
 #include "doctest.h"

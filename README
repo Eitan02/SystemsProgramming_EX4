@@ -1,43 +1,53 @@
-# MyContainerProject
+# MyContainer Project
 
-**Author:** eitan.derdiger@gmail.com
-**Course:** Systems Programming – Templates, Functors, Containers & Iterators
+Author: [eitan.derdiger@gmail.com]
+Course: Systems Programming – Templates, Functors, Containers & Iterators
 
 ---
 
 ## Overview
 
-`MyContainer<T>` is a generic, dynamic container that stores comparable elements and provides six custom traversal orders via dedicated iterator classes. It supports:
+`MyContainer<T>` is a generic C++ container for comparable elements that supports dynamic insertion, removal, and six custom iteration patterns:
 
-* **add(T)**: insert a new element (duplicates allowed)
-* **remove(T)**: remove all occurrences of a given element (throws if not found)
-* **size()**: return the current number of elements
-* **Custom iterators**:
+* `Order`: Insertion order (default)
+* `AscendingOrder`: Sorted by value ascending
+* `DescendingOrder`: Sorted by value descending
+* `ReverseOrder`: Reverse insertion order
+* `SideCrossOrder`: Alternating smallest/largest
+* `MiddleOutOrder`: Center-first, then left/right alternation
 
-  * `Order` (insertion order)
-  * `AscendingOrder` (smallest to largest)
-  * `DescendingOrder` (largest to smallest)
-  * `ReverseOrder` (reverse insertion order)
-  * `SideCrossOrder` (smallest, largest, 2nd-smallest, 2nd-largest, …)
-  * `MiddleOutOrder` (middle element first, then alternate left/right)
-* **Range-based for loops**: aliases to `beginOrder()`/`endOrder()`
+All iterators are implemented as nested classes of `MyContainer` and inherit from a common `BaseIterator` that provides standard iterator operations.
 
-> **Special Case (size == 2):** Any iterator’s `operator++()` on the last valid element moves to end without throwing; a subsequent `operator++()` throws a `std::runtime_error`.
+---
 
-All iterators are read-only (`const`), define standard iterator traits, support prefix/postfix increments, and throw if used out of range.
+## Features
+
+* add(const T& value): Insert a new value (duplicates allowed)
+* remove(const T& value): Remove all occurrences (throws if not found)
+* size() const: Get the current number of elements
+* operator<<: Print container in insertion order
+* begin()/end(): Enable range-based for loops
+* Snapshot behavior: Iterators retain their own copy of traversal order
+
+---
+
+## Requirements
+
+* C++17 or later
+* `T` must support `operator<` and `operator==`
+* No memory leaks (verified via valgrind)
 
 ---
 
 ## Repository Structure
 
-
+```sh
 MyContainerProject/
-├── Demo.cpp
-├── Makefile
-├── README.md
+├── Demo.cpp                # Extended demonstration
+├── Makefile                # Build/test/clean/valgrind targets
 ├── include/
-│   ├── MyContainer.hpp
-│   └── iterators/
+│   ├── MyContainer.hpp     # Core container template
+│   └── iterators/          # Custom iterators:
 │       ├── BaseIterator.hpp
 │       ├── Order.hpp
 │       ├── AscendingOrder.hpp
@@ -45,142 +55,49 @@ MyContainerProject/
 │       ├── ReverseOrder.hpp
 │       ├── SideCrossOrder.hpp
 │       └── MiddleOutOrder.hpp
-└── tests/
-    ├── test_core.cpp
-    ├── test_order.cpp
-    ├── test_ascending.cpp
-    ├── test_descending.cpp
-    ├── test_reverse.cpp
-    ├── test_sidecross.cpp
-    ├── test_middleout.cpp
-    ├── test_exceptions.cpp
-    └── test_snapshot.cpp
-
-
-* **Demo.cpp**: Extended demonstration showing container usage with `int`, `std::string`, and `double`.
-* **include/MyContainer.hpp**: Template container with forward-declarations of nested iterator classes.
-* **include/iterators/**: Headers defining each nested iterator (`Order`, `AscendingOrder`, etc.).
-* **tests/**: doctest unit tests for all functionality (only `test_core.cpp` defines `DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN`).
-* **Makefile**: Automates building the demo, building/running tests, checking leaks via valgrind, and cleaning.
+├── tests/                  # Unit tests (doctest framework)
+│   ├── test_core.cpp
+│   ├── test_order.cpp
+│   ├── test_ascending.cpp
+│   ├── test_descending.cpp
+│   ├── test_reverse.cpp
+│   ├── test_sidecross.cpp
+│   ├── test_middleout.cpp
+│   ├── test_exceptions.cpp
+│   └── test_snapshot.cpp
+```
 
 ---
 
 ## Build & Run
 
-### Prerequisites
+Make sure you have `make` and `g++` installed.
 
-* **C++17 compiler** (e.g., `g++` ≥ 9)
-* **make** (GNU Make)
-* **valgrind** (optional)
+### Common Commands:
 
-### Common Commands
-
-| Task                   | Command         |
-| ---------------------- | --------------- |
-| Build demo & tests     | `make all`      |
-| Build & run demo       | `make Main`     |
-| Build & run unit tests | `make test`     |
-| Check for memory leaks | `make valgrind` |
-| Clean build artifacts  | `make clean`    |
-
-To compile and run the demo:
-
-make Main
-./main_demo
-
-
-To compile and run all unit tests:
-
-make test
-./test_container
-
+| Command         | Description                    |
+| --------------- | ------------------------------ |
+| `make Main`     | Build and run the demo program |
+| `make test`     | Build and run unit tests       |
+| `make valgrind` | Run tests with memory checks   |
+| `make clean`    | Remove all compiled artifacts  |
 
 ---
 
-## Testing & Validation
+## Design Highlights
 
-* **Unit Tests** (`tests/*.cpp`) use [doctest](https://github.com/onqtam/doctest) to verify:
-
-  * Core operations (`add`, `remove`, `size`, `operator<<`).
-  * Each iterator type on empty, single-element, and multi-element scenarios (including `size == 2`).
-  * Exception paths: removing non-existent items, dereferencing past-end, incrementing beyond end.
-  * Snapshot behavior: iterators hold their sequence regardless of later container modifications.
-  * Iterator copy/assignment.
-
-* **Memory-Leak Check:**
-  make valgrind
-  
+* **Templates**: `MyContainer<T>` is fully generic
+* **Iterator Inheritance**: All iterators subclass `BaseIterator` and override only the ordering logic
+* **Shared Snapshot**: Iterator order is stored in `std::shared_ptr<std::vector<size_t>>` for copyable but consistent behavior
+* **Robust Exceptions**: Invalid dereference or increment past end throws `std::runtime_error`
+* **Tested and Leak-Free**: All functionalities are unit-tested and validated with valgrind
 
 ---
 
-## Code Highlights
+## Testing
 
-* **Templates & Constraints:**
+Unit tests use the doctest framework (https://github.com/doctest/doctest):
 
-  * All implementation lives in `include/MyContainer.hpp` (templated).
-  * `static_assert` ensures `T` supports `operator<` and `operator==`.
-
-* **Iterator Infrastructure:**
-
-  * `BaseIterator<ContainerType, ValueType>` stores a shared pointer to a precomputed index vector.
-  * Each derived iterator (in `include/iterators/`) builds its own visitation sequence in its constructor.
-  * Constant-time `operator++()` and `operator*()`; throws if out of range.
-  * Iterator traits:
-
-    using iterator_category = std::forward_iterator_tag;
-    using value_type        = T;
-    using pointer           = const T*;
-    using reference         = const T&;
-    using difference_type   = std::ptrdiff_t;
-    
-
-* **Exception Safety:**
-
-  * `remove()` throws `std::runtime_error("Element not found in container")` if no matching element.
-  * Dereferencing an invalid iterator throws `std::runtime_error("Iterator out of range")`.
-  * Incrementing past end throws `std::runtime_error("Increment past end")`.
-
-* **Range-Based for:**
-
-  * `begin()`/`end()` aliases to `beginOrder()`/`endOrder()`, so `for (auto x : container)` iterates in insertion order.
-
----
-
-## Usage Examples
-
-### Insert & Print
-
-#include "MyContainer.hpp"
-using namespace container;
-
-MyContainer<int> c;
-c.add(10);
-c.add(20);
-std::cout << c << "\n";  // Outputs: [10, 20]
-
-
-### Iterating in Ascending Order
-
-auto it = c.beginAscendingOrder();
-while (it != c.endAscendingOrder()) {
-    std::cout << *it << " ";
-    ++it;
-}
-
-
----
-
-## Extending & Maintenance
-
-* To add a new iterator pattern:
-
-  1. Create a new header in `include/iterators/`, subclassing `BaseIterator<MyContainer<T>, T>`.
-  2. In its constructor, build the `orderIndices` vector for the desired visitation order.
-  3. Add corresponding `beginX()`/`endX()` signatures to `MyContainer<T>` and define them after including the new iterator header.
-  4. Write unit tests in `tests/` to cover the new iterator.
-
-* Keep all code in headers for template visibility.
-
-* Update tests when adding new iterators or corner-case logic.
-
----
+```sh
+make test      # Compile and run tests
+make valgrind  # Check for memory leaks

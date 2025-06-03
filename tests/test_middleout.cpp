@@ -18,7 +18,7 @@ TEST_CASE("MiddleOutOrder visits odd-size container correctly") {
     c.add(6);
     c.add(1);
     c.add(2);
-    // Insertion indices: [0,1,2,3,4], mid = 2 to value 6
+    // Insertion indices: [0,1,2,3,4], mid = 2 = value 6
     // Expected pattern: [6, 15, 1, 7, 2]
     std::vector<int> expected = {6, 15, 1, 7, 2};
 
@@ -36,7 +36,7 @@ TEST_CASE("MiddleOutOrder visits even-size container correctly") {
     c.add(20);
     c.add(30);
     c.add(40);
-    // Insertion indices: [0,1,2,3], mid = (4-1)/2 = 1 to value 20
+    // Insertion indices: [0,1,2,3], mid = (4-1)/2 = 1 = value 20
     // Expected pattern: [20, 10, 30, 40]
     std::vector<int> expected = {20, 10, 30, 40};
 

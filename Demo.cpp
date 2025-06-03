@@ -18,7 +18,7 @@ using namespace container;
 
 /*
     Extended Demo for MyContainer<T> showcasing:
-    - Multiple types: int, std::string, double
+    - Multiple types: int, string, double
     - All iterator traversal orders
     - Exception handling for remove and iterator operations
     - Dynamic modifications and iterator independence
