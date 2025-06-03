@@ -41,7 +41,6 @@ All iterators are implemented as nested classes of `MyContainer` and inherit fro
 
 ## Repository Structure
 
-```sh
 MyContainerProject/
 ├── Demo.cpp                # Extended demonstration
 ├── Makefile                # Build/test/clean/valgrind targets
@@ -65,7 +64,6 @@ MyContainerProject/
 │   ├── test_middleout.cpp
 │   ├── test_exceptions.cpp
 │   └── test_snapshot.cpp
-```
 
 ---
 
@@ -98,6 +96,5 @@ Make sure you have `make` and `g++` installed.
 
 Unit tests use the doctest framework (https://github.com/doctest/doctest):
 
-```sh
 make test      # Compile and run tests
 make valgrind  # Check for memory leaks
